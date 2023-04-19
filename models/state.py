@@ -1,31 +1,22 @@
 #!/usr/bin/python3
-"""This is the state class"""
-from os import getenv
-from models.base_model import BaseModel, Base
-from models.city import City
+"""Defines the City class."""
+from models.base_model import Base
+from models.base_model import BaseModel
+from sqlalchemy import Column
+from sqlalchemy import ForeignKey
+from sqlalchemy import String
 from sqlalchemy.orm import relationship
-from sqlalchemy import Column, Integer, String, ForeignKey
 
 
-class State(BaseModel, Base):
-    """This is the class for State
+class City(BaseModel, Base):
+    """Represents a city class
     Attributes:
-        name: input name
+        __tablename__ (str): The name of the MySQL table to store Cities.
+        name (sqlalchemy String): The name of the City.
+        state_id (sqlalchemy String): The state id of the City.
     """
-    __tablename__ = "states"
+    __tablename__ = "cities"
     name = Column(String(128), nullable=False)
-    if getenv("HBNB_TYPE_STORAGE") == "db":
-        cities = relationship(City, backref="state",
-                              cascade="all, delete-orphan")
-    else:
-        @property
-        def cities(self):
-            '''
-            City list for FileStorage
-            '''
-            from models import storage
-            cities_by_state = []
-            for city in storage.all('City').values():
-                if city.state_id == self.id:
-                    cities_by_state.append(city)
-            return cities_by_state
+    state_id = Column(String(60), ForeignKey("states.id"), nullable=False)
+    places = relationship("Place", back_populates="cities", cascade="delete")
+

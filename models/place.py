@@ -6,11 +6,10 @@ from models.base_model import Base
 from models.base_model import BaseModel
 from models.amenity import Amenity
 from models.review import Review
-from sqlalchemy import Column, Float, ForeignKey, Integer, String, Table, MetaData,
+from sqlalchemy import Column, Float, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 
-metadata = Base.metadata()
-association_table = Table("place_amenity", metadata,
+association_table = Table("place_amenity", Base.metadata,
                           Column("place_id", String(60),
                                  ForeignKey("places.id"),
                                  primary_key=True, nullable=False),

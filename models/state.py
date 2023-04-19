@@ -1,22 +1,28 @@
 #!/usr/bin/python3
-"""Defines the City class."""
-from models.base_model import Base
-from models.base_model import BaseModel
-from sqlalchemy import Column
-from sqlalchemy import ForeignKey
-from sqlalchemy import String
+""" State Module for HBNB project """
+from models.base_model import BaseModel, Base
+import models
+from models.city import City
 from sqlalchemy.orm import relationship
+from sqlalchemy import Column, String
+from os import getenv
 
 
-class City(BaseModel, Base):
-    """Represents a city class
-    Attributes:
-        __tablename__ (str): The name of the MySQL table to store Cities.
-        name (sqlalchemy String): The name of the City.
-        state_id (sqlalchemy String): The state id of the City.
-    """
-    __tablename__ = "cities"
-    name = Column(String(128), nullable=False)
-    state_id = Column(String(60), ForeignKey("states.id"), nullable=False)
-    places = relationship("Place", back_populates="cities", cascade="delete")
+class State(BaseModel, Base):
+    """ State class """
+    if models.is_type == "db":
+        __tablename__ = 'states'
+        name = Column(String(128), nullable=False)
+        cities = relationship('City', backref='state', cascade='delete')
+    else:
+        name = ""
 
+    if models.is_type != 'db':
+        @property
+        def cities(self):
+            cities_list = []
+            all_cities = models.storage.all(City).values()
+            for city in all_cities:
+                if city.state_id == self.id:
+                    cities_list.append(city)
+            return cities_list

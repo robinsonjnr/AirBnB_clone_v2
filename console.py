@@ -21,6 +21,7 @@ class HBNBCommand(cmd.Cmd):
                    "City": City, "Amenity": Amenity,
                    "Place": Place, "Review": Review}
 
+
     def emptyline(self):
         """Ignores empty spaces"""
         pass
@@ -218,6 +219,8 @@ class HBNBCommand(cmd.Cmd):
                 if name[0] == my_list[0]:
                     counter += 1
             print(counter)
+
+
         except NameError:
             print("** class doesn't exist **")
 
